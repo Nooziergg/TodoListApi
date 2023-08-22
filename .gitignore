@@ -1,0 +1,185 @@
+## .NET Core
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+*.pfx
+*.publishsettings
+*.psess
+*.pssession
+*.pubxml
+*.pubxml.user
+*.backlog
+*.config
+*.swp
+*.bak
+*.bak.*
+*.log
+*.log.*
+*.tmp
+*.tmp.*
+*.sw?
+*unwanted
+*.pidb
+*.svclog
+*.scc
+*.pidb
+*.svclog
+*.scc
+
+# Rider directory
+.idea/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+*.code-workspace
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# JetBrains Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.dbmdl
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+*~
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+
+# Rider
+.idea/
+
+# User-specific
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.dbmdl
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+*.psess
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+*.core
+
+# Tye
+.tye/
+
+# Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Visual Studio for Mac
+.vscode/
+.vscode/
+*.code-workspace
+
+# Rider
+.idea/
+
+# User-specific
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.dbmdl
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+*.core
+
+# Tye
+.tye/
+
+# Visual Studio for Mac
+.vscode/
+.vscode/
+*.code-workspace
+
+# Rider
+.idea/
+
+# User-specific
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.dbmdl
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+*~
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+
+# Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
