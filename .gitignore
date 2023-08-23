@@ -32,6 +32,7 @@
 **/bin/
 **/obj/
 
+
 # Rider directory
 .idea/
 
@@ -186,3 +187,8 @@ $RECYCLE.BIN/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
+ToDoList/bin/Debug/net7.0/ToDoList.pdb
+ToDoList/bin/Debug/net7.0/ToDoList.dll
+ToDoList/bin/Debug/net7.0/ToDoList.pdb
+ToDoList/obj/Debug/net7.0/ToDoList.pdb
+ToDoList/obj/Debug/net7.0/ToDoList.dll
