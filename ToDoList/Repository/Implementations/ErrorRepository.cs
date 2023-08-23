@@ -1,16 +1,15 @@
-﻿using ToDoList.Data;
+﻿using System;
+using ToDoList.Data;
 using ToDoList.Models;
 using ToDoList.Repository.Interfaces;
 
 namespace ToDoList.Repository.Implementations
 {
-    public class ErrorRepository : IErrorRepository
+    public class ErrorRepository : BaseRepository<TarefaContext>, IErrorRepository
     {
-        private readonly TarefaContext _context;
-
-        public ErrorRepository(TarefaContext context)
+        public ErrorRepository(TarefaContext context, string connectionString)
+            : base(context, connectionString)
         {
-            _context = context;
         }
 
         public void LogError(Exception exception)
@@ -22,9 +21,8 @@ namespace ToDoList.Repository.Implementations
                 DateOccurred = DateTime.UtcNow
             };
 
-            _context.ErrorLogs.Add(errorLog);
-            _context.SaveChanges();
+            // Use the Add method from BaseRepository
+            Add(errorLog);
         }
     }
-
 }

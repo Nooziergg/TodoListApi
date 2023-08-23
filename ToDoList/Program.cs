@@ -1,6 +1,4 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 using ToDoList.Data;
 using ToDoList.Repository.Implementations;
 using ToDoList.Repository.Interfaces;
@@ -17,21 +15,17 @@ builder.WebHost.UseUrls(applicationUrl);
 // Configuração da string de conexão.
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-
 // Adiciona o DbContext ao container de serviços.
 builder.Services.AddDbContext<TarefaContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Adiciona Dapper para injeção de dependência.
-builder.Services.AddTransient<IDbConnection>(b =>
-    new SqlConnection(connectionString));
-
-// Registra os serviços e repositórios que você criou.
+// Register the services and repositories you created with the connection string.
 builder.Services.AddScoped<ITarefaService, TarefaService>();
-builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
-builder.Services.AddScoped<IErrorRepository, ErrorRepository>();
+builder.Services.AddScoped<ITarefaRepository>(provider =>
+    new TarefaRepository(provider.GetRequiredService<TarefaContext>(), connectionString));
+builder.Services.AddScoped<IErrorRepository>(provider =>
+    new ErrorRepository(provider.GetRequiredService<TarefaContext>(), connectionString));
 builder.Services.AddScoped<IErrorService, ErrorService>();
-
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -40,7 +34,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 var app = builder.Build();
 
