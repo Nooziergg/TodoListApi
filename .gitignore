@@ -33,7 +33,8 @@
 **/obj/
 /obj 
 /bin
-
+obj/
+bin/
 
 # Rider directory
 .idea/
