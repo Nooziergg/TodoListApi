@@ -17,6 +17,7 @@ builder.WebHost.UseUrls(applicationUrl);
 // Configuração da string de conexão.
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+
 // Adiciona o DbContext ao container de serviços.
 builder.Services.AddDbContext<TarefaContext>(options =>
     options.UseSqlServer(connectionString));
@@ -28,10 +29,15 @@ builder.Services.AddTransient<IDbConnection>(b =>
 // Registra os serviços e repositórios que você criou.
 builder.Services.AddScoped<ITarefaService, TarefaService>();
 builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
+builder.Services.AddScoped<IErrorRepository, ErrorRepository>();
+builder.Services.AddScoped<IErrorService, ErrorService>();
+
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
 });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -40,7 +46,14 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/error");
+}
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
