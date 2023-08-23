@@ -31,6 +31,8 @@
 *.scc
 **/bin/
 **/obj/
+/obj 
+/bin
 
 
 # Rider directory
