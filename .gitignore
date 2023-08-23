@@ -29,6 +29,8 @@
 *.pidb
 *.svclog
 *.scc
+**/bin/
+**/obj/
 
 # Rider directory
 .idea/
