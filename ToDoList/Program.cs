@@ -12,10 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 var applicationUrl = builder.Configuration["AppSettings:ApplicationUrl"] ?? "http://localhost:5000";
 builder.WebHost.UseUrls(applicationUrl);
 
-// Configuração da string de conexão.
+// Configures connection string
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Adiciona o DbContext ao container de serviços.
+// Add the DbContext to the services container.
 builder.Services.AddDbContext<TarefaContext>(options =>
     options.UseSqlServer(connectionString));
 

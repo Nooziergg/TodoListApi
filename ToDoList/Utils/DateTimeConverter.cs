@@ -3,6 +3,7 @@
     using System;
     using System.Text.Json;
     using System.Text.Json.Serialization;
+    using ToDoList.Common.Exceptions;
 
     public class DateTimeConverter : JsonConverter<DateTime>
     {
@@ -10,8 +11,15 @@
 
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var stringValue = reader.GetString();
-            return DateTime.ParseExact(stringValue, Format, null);
+            try
+            {
+                var stringValue = reader.GetString();
+                return DateTime.ParseExact(stringValue, Format, null);
+            }
+            catch
+            {
+                throw new BusinessException("Data inválida! O formato deve ser dd/MM/yyyy");
+            }
         }
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)

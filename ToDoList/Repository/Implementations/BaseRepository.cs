@@ -41,8 +41,7 @@ namespace ToDoList.Repository.Implementations
             _context.Set<T>().Remove(entity);
             _context.SaveChanges();
         }
-
-        // Dapper-based generic methods can be added as needed
+      
         protected IEnumerable<T> Query<T>(string sql, object parameters = null)
         {            
             using var connection = CreateConnection();
@@ -56,7 +55,7 @@ namespace ToDoList.Repository.Implementations
         {
             using var connection = CreateConnection();
             connection.Open();
-            var result = connection.QuerySingle<T>(sql, parameters);
+            var result = connection.QuerySingleOrDefault<T>(sql, parameters);
             connection.Close();
             return result;
         }

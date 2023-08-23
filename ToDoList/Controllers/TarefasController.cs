@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToDoList.Models;
+using ToDoList.Models.DbModels;
+using ToDoList.Models.DTOs;
 using ToDoList.Services.Interfaces;
 
 [ApiController]
@@ -18,8 +19,7 @@ public class TarefasController : ControllerBase
     {
         return Ok(_service.GetAll());
     }
-
-    // Outros métodos HTTP
+     
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
@@ -34,30 +34,41 @@ public class TarefasController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Add(Tarefa tarefa)
-    {
-        _service.Add(tarefa);
+    public IActionResult Add(TarefaInsertDTO tarefaDto)
+    {      
 
+        var tarefa = new Tarefa
+        {
+            Nome = tarefaDto.Nome,
+            Custo = tarefaDto.Custo,
+            DataLimite = tarefaDto.DataLimite        
+        };
+
+        _service.Add(tarefa);
         return CreatedAtAction(nameof(GetById), new { id = tarefa.Id }, tarefa);
     }
 
+
     [HttpPut("{id}")]
-    public IActionResult Update(int id, Tarefa tarefa)
+    public IActionResult Update(int id, TarefaUpdateDTO tarefaDto)
     {
-        if (id != tarefa.Id)
+        if (id != tarefaDto.Id)
         {
             return BadRequest("Ids não conferem");
         }
 
         var tarefaExistente = _service.GetById(id);
-
         if (tarefaExistente == null)
         {
             return NotFound();
         }
+        
+        tarefaExistente.Nome = tarefaDto.Nome;
+        tarefaExistente.Custo = tarefaDto.Custo;
+        tarefaExistente.DataLimite = tarefaDto.DataLimite;
+        tarefaExistente.OrdemApresentacao = tarefaDto.OrdemApresentacao;
 
-        _service.Update(tarefa);
-
+        _service.Update(tarefaExistente);
         return NoContent();
     }
 

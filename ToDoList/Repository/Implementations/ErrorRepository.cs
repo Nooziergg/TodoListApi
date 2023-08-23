@@ -1,6 +1,6 @@
 ﻿using System;
 using ToDoList.Data;
-using ToDoList.Models;
+using ToDoList.Models.DbModels;
 using ToDoList.Repository.Interfaces;
 
 namespace ToDoList.Repository.Implementations
@@ -20,8 +20,7 @@ namespace ToDoList.Repository.Implementations
                 StackTrace = exception.StackTrace,
                 DateOccurred = DateTime.UtcNow
             };
-
-            // Use the Add method from BaseRepository
+        
             Add(errorLog);
         }
     }

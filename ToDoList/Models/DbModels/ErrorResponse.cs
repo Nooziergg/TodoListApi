@@ -1,4 +1,4 @@
-﻿namespace ToDoList.Models
+﻿namespace ToDoList.Models.DbModels
 {
     public class ErrorResponse
     {
