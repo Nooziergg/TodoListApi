@@ -13,34 +13,50 @@ SET TAG=%TIMESTAMP%
 CD %~dp0
 
 :: Paths relative to root
-SET APP_PATH=.
+SET APP_PATH=.\ToDoList
 SET TEST_PATH=.\ToDoList.Tests
 
-:: Navigate to your test project directory
-cd %TEST_PATH%
+:: Print current directory for troubleshooting
+echo Current directory: %CD%
 
+
+
+...
 :: Run the tests
 echo Running Tests...
 dotnet test
 IF %ERRORLEVEL% NEQ 0 (
     echo Tests Failed! Aborting deployment...
+    pause
     exit /b 1
 )
 
-:: Navigate to your application directory
-cd %APP_PATH%
-
-:: Build the Docker image
+:: Build the Docker image from the root directory pointing to the Dockerfile in the APP_PATH
 echo Building Docker Image...
-docker build -t gcr.io/%PROJECT_ID%/%IMAGE_NAME%:%TAG% .
+docker build -t gcr.io/%PROJECT_ID%/%IMAGE_NAME%:%TAG% -f %APP_PATH%\Dockerfile %APP_PATH%
+IF %ERRORLEVEL% NEQ 0 (
+    echo Docker build failed! Aborting deployment...
+    pause
+    exit /b 1
+)
 
 :: Push the Docker image to GCR
 echo Pushing Image to Google Container Registry...
 docker push gcr.io/%PROJECT_ID%/%IMAGE_NAME%:%TAG%
+IF %ERRORLEVEL% NEQ 0 (
+    echo Image push failed! Aborting deployment...
+    pause
+    exit /b 1
+)
 
 :: Deploy to Google Cloud Run
 echo Deploying to Google Cloud Run...
 gcloud run deploy %SERVICE_NAME% --image gcr.io/%PROJECT_ID%/%IMAGE_NAME%:%TAG% --platform managed --region %REGION%
+IF %ERRORLEVEL% NEQ 0 (
+    echo Deployment failed! Please check and try again.
+    pause
+    exit /b 1
+)
 
 echo Deployment Complete!
 ENDLOCAL
