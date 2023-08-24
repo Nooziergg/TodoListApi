@@ -15,11 +15,12 @@ public class TarefasController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult GetAll([FromQuery] TarefaFilterDTO filterDto)
     {
-        return Ok(_service.GetAll());
+        var tarefas = _service.GetAll(filterDto);
+        return Ok(tarefas);
     }
-     
+
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {

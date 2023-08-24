@@ -1,5 +1,6 @@
 ﻿using ToDoList.Common.Exceptions;
 using ToDoList.Models.DbModels;
+using ToDoList.Models.DTOs;
 using ToDoList.Repository.Interfaces;
 using ToDoList.Services.Interfaces;
 
@@ -13,10 +14,10 @@ namespace ToDoList.Services.Implementations
         {
             _repository = repository;
         }
-       
-        public IEnumerable<Tarefa> GetAll()
+
+        public IEnumerable<Tarefa> GetAll(TarefaFilterDTO filter)
         {
-            return _repository.GetAll();
+            return _repository.GetAll(filter);
         }
 
         public Tarefa GetById(int id)

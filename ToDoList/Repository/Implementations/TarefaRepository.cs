@@ -1,7 +1,9 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using System.Text;
 using ToDoList.Data;
 using ToDoList.Models.DbModels;
+using ToDoList.Models.DTOs;
 using ToDoList.Repository.Interfaces;
 
 namespace ToDoList.Repository.Implementations
@@ -13,9 +15,43 @@ namespace ToDoList.Repository.Implementations
         { }
 
         // Dapper for reading
-        public IEnumerable<Tarefa> GetAll()
+        public IEnumerable<Tarefa> GetAll(TarefaFilterDTO filter)
         {
-            return Query<Tarefa>("SELECT * FROM Tarefas ORDER BY OrdemApresentacao");
+            var conditions = new List<string>();
+            var parameters = new DynamicParameters();
+
+            conditions.Add("1=1"); // Always true, a starting point
+
+            if (!string.IsNullOrWhiteSpace(filter.Nome))
+            {
+                conditions.Add("Nome LIKE @Nome");
+                parameters.Add("Nome", $"%{filter.Nome}%");
+            }
+
+            if (filter.CustoMin.HasValue)
+            {
+                conditions.Add("Custo >= @CustoMin");
+                parameters.Add("CustoMin", filter.CustoMin);
+            }
+
+            if (filter.CustoMax.HasValue)
+            {
+                conditions.Add("Custo <= @CustoMax");
+                parameters.Add("CustoMax", filter.CustoMax);
+            }
+
+            string baseQuery = $"SELECT * FROM Tarefas WHERE {string.Join(" AND ", conditions)}";
+            string pagination = "ORDER BY OrdemApresentacao OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+
+            parameters.Add("Offset", (filter.Page - 1) * filter.PageSize);
+            parameters.Add("PageSize", filter.PageSize);
+
+            using var connection = CreateConnection();
+            connection.Open();
+            var result = connection.Query<Tarefa>($"{baseQuery} {pagination}", parameters);
+            connection.Close();
+
+            return result;
         }
 
         public Tarefa GetById(int id)

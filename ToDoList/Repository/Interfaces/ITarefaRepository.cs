@@ -1,10 +1,11 @@
 ﻿using ToDoList.Models.DbModels;
+using ToDoList.Models.DTOs;
 
 namespace ToDoList.Repository.Interfaces
 {
     public interface ITarefaRepository
     {
-        IEnumerable<Tarefa> GetAll();
+        IEnumerable<Tarefa> GetAll(TarefaFilterDTO filter);
         Tarefa GetById(int id);
         void Add(Tarefa tarefa);
         void Update(Tarefa tarefa);
