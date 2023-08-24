@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Data;
+using ToDoList.FIlters.Swagger;
 using ToDoList.Repository.Implementations;
 using ToDoList.Repository.Interfaces;
 using ToDoList.Services.Implementations;
@@ -7,7 +8,7 @@ using ToDoList.Services.Interfaces;
 using ToDoList.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
-
+    
 // Read the ApplicationUrl from configuration (this will get the environment-specific value)
 var applicationUrl = builder.Configuration["AppSettings:ApplicationUrl"] ?? "http://localhost:5000";
 builder.WebHost.UseUrls(applicationUrl);
@@ -33,7 +34,11 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "ToDoList", Version = "v1" });
+    c.SchemaFilter<CustomSchemaFilter>();
+});
 
 var app = builder.Build();
 
