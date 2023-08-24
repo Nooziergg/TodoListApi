@@ -5,22 +5,22 @@ using ToDoList.Services.Interfaces;
 
 namespace ToDoList.Tests
 {
-    public class TarefasControllerTests
+    public class TasksControllerTests
     {
-        private readonly TarefasController _controller;
-        private readonly Mock<ITarefaService> _serviceMock = new Mock<ITarefaService>();
+        private readonly TasksController _controller;
+        private readonly Mock<ITasksService> _serviceMock = new Mock<ITasksService>();
 
-        public TarefasControllerTests()
+        public TasksControllerTests()
         {
-            _controller = new TarefasController(_serviceMock.Object);
+            _controller = new TasksController(_serviceMock.Object);
         }
 
         [Fact]
         public void GetAll_WithValidFilter_ReturnsOk()
         {
             // Arrange
-            var filter = new TarefaFilterDTO();
-            _serviceMock.Setup(s => s.GetAll(filter)).Returns(new List<Tarefa>());
+            var filter = new TasksFilterDTO();
+            _serviceMock.Setup(s => s.GetAll(filter)).Returns(new List<Tasks>());
 
             // Act
             var result = _controller.GetAll(filter);
@@ -33,7 +33,7 @@ namespace ToDoList.Tests
         public void GetById_ExistingId_ReturnsOk()
         {
             // Arrange
-            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns(new Tarefa());
+            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns(new Tasks());
 
             // Act
             var result = _controller.GetById(1);
@@ -46,7 +46,7 @@ namespace ToDoList.Tests
         public void GetById_NonExistingId_ReturnsNotFound()
         {
             // Arrange
-            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns((Tarefa)null);
+            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns((Tasks)null);
 
             // Act
             var result = _controller.GetById(999); // assuming 999 is a non-existing ID
@@ -56,11 +56,11 @@ namespace ToDoList.Tests
         }
 
         [Fact]
-        public void Add_ValidTarefa_ReturnsCreatedAtAction()
+        public void Add_ValidTasks_ReturnsCreatedAtAction()
         {
             // Arrange
-            var tarefaDto = new TarefaInsertDTO();
-            _serviceMock.Setup(s => s.Add(It.IsAny<Tarefa>()));
+            var tarefaDto = new TasksInsertDTO();
+            _serviceMock.Setup(s => s.Add(It.IsAny<Tasks>()));
 
             // Act
             var result = _controller.Add(tarefaDto);
@@ -70,11 +70,11 @@ namespace ToDoList.Tests
         }
 
         [Fact]
-        public void Add_DuplicateTarefa_ThrowsException()
+        public void Add_DuplicateTasks_ThrowsException()
         {
             // Arrange
-            var tarefaDto = new TarefaInsertDTO { Nome = "DuplicateName" };
-            _serviceMock.Setup(s => s.Add(It.IsAny<Tarefa>())).Throws(new BusinessException("Nome da tarefa já existe!"));
+            var tarefaDto = new TasksInsertDTO { Nome = "DuplicateName" };
+            _serviceMock.Setup(s => s.Add(It.IsAny<Tasks>())).Throws(new BusinessException("Nome da tarefa já existe!"));
 
             // Act & Assert
             Assert.Throws<BusinessException>(() => _controller.Add(tarefaDto));
@@ -84,8 +84,8 @@ namespace ToDoList.Tests
         public void Update_MatchingIds_ReturnsNoContent()
         {
             // Arrange
-            var tarefaDto = new TarefaUpdateDTO { Id = 1 };
-            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns(new Tarefa());
+            var tarefaDto = new TasksUpdateDTO { Id = 1 };
+            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns(new Tasks());
 
             // Act
             var result = _controller.Update(1, tarefaDto);
@@ -98,7 +98,7 @@ namespace ToDoList.Tests
         public void Update_MismatchingIds_ReturnsBadRequest()
         {
             // Arrange
-            var tarefaDto = new TarefaUpdateDTO { Id = 2 };
+            var tarefaDto = new TasksUpdateDTO { Id = 2 };
 
             // Act
             var result = _controller.Update(1, tarefaDto);
@@ -111,7 +111,7 @@ namespace ToDoList.Tests
         public void Delete_ExistingId_ReturnsNoContent()
         {
             // Arrange
-            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns(new Tarefa());
+            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns(new Tasks());
 
             // Act
             var result = _controller.Delete(1);
@@ -124,7 +124,7 @@ namespace ToDoList.Tests
         public void Delete_NonExistingId_ReturnsNotFound()
         {
             // Arrange
-            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns((Tarefa)null);
+            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns((Tasks)null);
 
             // Act
             var result = _controller.Delete(999);

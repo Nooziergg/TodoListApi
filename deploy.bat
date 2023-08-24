@@ -56,5 +56,6 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 echo Deployment Complete!
-ENDLOCAL
 pause
+ENDLOCAL
+

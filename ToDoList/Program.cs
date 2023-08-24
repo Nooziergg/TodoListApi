@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using ToDoList.Data;
 using ToDoList.FIlters.Swagger;
 using ToDoList.Repository.Implementations;
@@ -44,6 +45,10 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "ToDoList", Version = "v1" });
     c.SchemaFilter<CustomSchemaFilter>();
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+    
 });
 
 var app = builder.Build();
