@@ -3,7 +3,7 @@
     using System;
     using System.Text.Json;
     using System.Text.Json.Serialization;
-    using ToDoList.Common.Exceptions;
+    using ToDoList.Infrastructure.Common.Exceptions;
 
     public class DateTimeConverter : JsonConverter<DateTime>
     {

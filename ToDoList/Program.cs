@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using ToDoList.Data;
-using ToDoList.FIlters.Swagger;
+using ToDoList.Infrastructure.Binders;
+using ToDoList.Infrastructure.FIlters.Swagger;
+using ToDoList.Infrastructure.Providers;
 using ToDoList.Repository.Implementations;
 using ToDoList.Repository.Interfaces;
 using ToDoList.Services.Implementations;
@@ -9,7 +12,7 @@ using ToDoList.Services.Interfaces;
 using ToDoList.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
-    
+
 // Read the ApplicationUrl from configuration (this will get the environment-specific value)
 var applicationUrl = builder.Configuration["AppSettings:ApplicationUrl"] ?? "http://localhost:5000";
 builder.WebHost.UseUrls(applicationUrl);
@@ -35,7 +38,13 @@ builder.Services.AddScoped<IErrorRepository>(provider =>
     new ErrorRepository(provider.GetRequiredService<TarefaContext>(), connectionString));
 builder.Services.AddScoped<IErrorService, ErrorService>();
 
-builder.Services.AddControllers().AddJsonOptions(options =>
+builder.Services.AddControllers(options =>
+{
+    
+    options.ModelBinderProviders.Insert(0, new TrimStringModelBinderProvider());
+    options.ModelBinderProviders.Insert(0, new CustomDateBinderProvider());
+})
+.AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
 });
@@ -48,7 +57,7 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
-    
+
 });
 
 var app = builder.Build();

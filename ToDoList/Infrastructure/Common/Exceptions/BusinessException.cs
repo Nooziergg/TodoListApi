@@ -1,4 +1,4 @@
-﻿namespace ToDoList.Common.Exceptions
+﻿namespace ToDoList.Infrastructure.Common.Exceptions
 {
     public class BusinessException : Exception
     {

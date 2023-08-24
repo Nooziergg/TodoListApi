@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ToDoList.Infrastructure.Common.Exceptions;
 using ToDoList.Models.DbModels;
 using ToDoList.Models.DTOs;
 using ToDoList.Services.Interfaces;
@@ -76,24 +77,31 @@ public class TarefasController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult Update(int id, TarefaUpdateDTO tarefaDto)
     {
-        if (id != tarefaDto.Id)
+        try
         {
-            return BadRequest("Ids não conferem");
-        }
+            if (id != tarefaDto.Id)
+            {
+                return BadRequest("Ids não conferem");
+            }
 
-        var tarefaExistente = _service.GetById(id);
-        if (tarefaExistente == null)
+            var tarefaExistente = _service.GetById(id);
+            if (tarefaExistente == null)
+            {
+                return NotFound();
+            }
+
+            tarefaExistente.Nome = tarefaDto.Nome;
+            tarefaExistente.Custo = tarefaDto.Custo;
+            tarefaExistente.DataLimite = tarefaDto.DataLimite;
+            tarefaExistente.OrdemApresentacao = tarefaDto.OrdemApresentacao;
+
+            _service.Update(tarefaExistente);
+            return NoContent();
+        }
+        catch (BusinessException ex)
         {
-            return NotFound();
+            return BadRequest(ex.Message);
         }
-
-        tarefaExistente.Nome = tarefaDto.Nome;
-        tarefaExistente.Custo = tarefaDto.Custo;
-        tarefaExistente.DataLimite = tarefaDto.DataLimite;
-        tarefaExistente.OrdemApresentacao = tarefaDto.OrdemApresentacao;
-
-        _service.Update(tarefaExistente);
-        return NoContent();
     }
 
     /// <summary>

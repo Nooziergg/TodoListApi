@@ -1,4 +1,4 @@
-﻿using ToDoList.Common.Exceptions;
+﻿using ToDoList.Infrastructure.Common.Exceptions;
 using ToDoList.Models.DbModels;
 using ToDoList.Repository.Interfaces;
 using ToDoList.Services.Interfaces;

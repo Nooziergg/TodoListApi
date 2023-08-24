@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace ToDoList.FIlters.Swagger
+namespace ToDoList.Infrastructure.FIlters.Swagger
 {
     public class CustomSchemaFilter : ISchemaFilter
     {

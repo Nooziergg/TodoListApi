@@ -1,4 +1,4 @@
-﻿using ToDoList.Common.Exceptions;
+﻿using ToDoList.Infrastructure.Common.Exceptions;
 using ToDoList.Models.DbModels;
 using ToDoList.Models.DTOs;
 using ToDoList.Repository.Interfaces;
@@ -39,24 +39,24 @@ namespace ToDoList.Services.Implementations
             _repository.Add(tarefa);
         }
 
-        public void Update(Tarefa tarefa)
-        {
-            var existingTask = _repository.GetByName(tarefa.Nome);
-
-            if (existingTask != null && existingTask.Id != tarefa.Id)
+            public void Update(Tarefa tarefa)
             {
-                throw new BusinessException("Nome da tarefa já existe!");
+                var existingTask = _repository.GetByName(tarefa.Nome);
+
+                if (existingTask != null && existingTask.Id != tarefa.Id)
+                {
+                    throw new BusinessException("Nome da tarefa já existe!");
+                }
+
+                var taskWithSameOrder = _repository.GetByOrder(tarefa.OrdemApresentacao);
+
+                if (taskWithSameOrder != null && taskWithSameOrder.Id != tarefa.Id)
+                {
+                    _repository.ShiftOrderFrom(tarefa.OrdemApresentacao);
+                }
+
+                _repository.Update(tarefa);
             }
-
-            var taskWithSameOrder = _repository.GetByOrder(tarefa.OrdemApresentacao);
-
-            if (taskWithSameOrder != null && taskWithSameOrder.Id != tarefa.Id)
-            {
-                _repository.ShiftOrderFrom(tarefa.OrdemApresentacao);
-            }
-
-            _repository.Update(tarefa);
-        }
 
         public void Delete(int id)
         {
