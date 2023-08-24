@@ -13,8 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 var applicationUrl = builder.Configuration["AppSettings:ApplicationUrl"] ?? "http://localhost:5000";
 builder.WebHost.UseUrls(applicationUrl);
 
-// Configures connection string
-string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (connectionString.StartsWith("EnvironmentVariable:"))
+{
+    var envVarName = connectionString.Split(":")[1];
+    connectionString = Environment.GetEnvironmentVariable(envVarName);
+}
+
 
 // Add the DbContext to the services container.
 builder.Services.AddDbContext<TarefaContext>(options =>
