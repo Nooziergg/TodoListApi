@@ -1,27 +1,21 @@
 @echo off
 SETLOCAL
 
-:: Variables
-SET PROJECT_ID=studious-plate-396617
-SET SERVICE_NAME=todolist-service
-SET REGION=southamerica-east1
-SET IMAGE_NAME=todolist-image
+:: Access Environment Variables
+SET PROJECT_ID=%PROJECT_ID%
+SET SERVICE_NAME=%SERVICE_NAME%
+SET REGION=%REGION%
+SET IMAGE_NAME=%IMAGE_NAME%
 SET TIMESTAMP=%date:~-4,4%%date:~-7,2%%date:~-10,2%%time:~0,2%%time:~3,2%
 SET TAG=%TIMESTAMP%
 
-:: Change the current directory to the script's location
-CD %~dp0
+:: Paths relative to the current script's directory
+SET APP_PATH=%~dp0\ToDoList
+SET TEST_PATH=%~dp0\ToDoList.Tests
 
-:: Paths relative to root
-SET APP_PATH=.\ToDoList
-SET TEST_PATH=.\ToDoList.Tests
+:: Navigate to your test project directory
+cd %TEST_PATH%
 
-:: Print current directory for troubleshooting
-echo Current directory: %CD%
-
-
-
-...
 :: Run the tests
 echo Running Tests...
 dotnet test
@@ -31,9 +25,12 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-:: Build the Docker image from the root directory pointing to the Dockerfile in the APP_PATH
+:: Navigate to your application directory
+cd %APP_PATH%
+
+:: Build the Docker image
 echo Building Docker Image...
-docker build -t gcr.io/%PROJECT_ID%/%IMAGE_NAME%:%TAG% -f %APP_PATH%\Dockerfile %APP_PATH%
+docker build -t gcr.io/%PROJECT_ID%/%IMAGE_NAME%:%TAG% .
 IF %ERRORLEVEL% NEQ 0 (
     echo Docker build failed! Aborting deployment...
     pause
@@ -44,7 +41,7 @@ IF %ERRORLEVEL% NEQ 0 (
 echo Pushing Image to Google Container Registry...
 docker push gcr.io/%PROJECT_ID%/%IMAGE_NAME%:%TAG%
 IF %ERRORLEVEL% NEQ 0 (
-    echo Image push failed! Aborting deployment...
+    echo Docker push failed! Aborting deployment...
     pause
     exit /b 1
 )
@@ -53,7 +50,7 @@ IF %ERRORLEVEL% NEQ 0 (
 echo Deploying to Google Cloud Run...
 gcloud run deploy %SERVICE_NAME% --image gcr.io/%PROJECT_ID%/%IMAGE_NAME%:%TAG% --platform managed --region %REGION%
 IF %ERRORLEVEL% NEQ 0 (
-    echo Deployment failed! Please check and try again.
+    echo Deployment failed!
     pause
     exit /b 1
 )
