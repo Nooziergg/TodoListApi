@@ -103,7 +103,10 @@ namespace ToDoList.Repository.Implementations
             string sql = "SELECT MAX(OrdemApresentacao) FROM Tarefas";
 
             using var connection = CreateConnection();
-            return connection.ExecuteScalar<int>(sql);
+            connection.Open();
+            int response = connection.ExecuteScalar<int>(sql);
+            connection.Close();
+            return response;
         }
 
 
