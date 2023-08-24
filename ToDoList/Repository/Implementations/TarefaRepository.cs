@@ -41,14 +41,19 @@ namespace ToDoList.Repository.Implementations
             }
 
             string baseQuery = $"SELECT * FROM Tarefas WHERE {string.Join(" AND ", conditions)}";
-            string pagination = "ORDER BY OrdemApresentacao OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+            string order = "ORDER BY OrdemApresentacao ";
+            string pagination = "";
+            if (filter.Paginate)
+            {
 
-            parameters.Add("Offset", (filter.Page - 1) * filter.PageSize);
-            parameters.Add("PageSize", filter.PageSize);
+                pagination = " OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY ";
+                parameters.Add("Offset", (filter.Page - 1) * filter.PageSize);
+                parameters.Add("PageSize", filter.PageSize);
+            }
 
             using var connection = CreateConnection();
             connection.Open();
-            var result = connection.Query<Tarefa>($"{baseQuery} {pagination}", parameters);
+            var result = connection.Query<Tarefa>($"{baseQuery} {order} {pagination}", parameters);
             connection.Close();
 
             return result;
