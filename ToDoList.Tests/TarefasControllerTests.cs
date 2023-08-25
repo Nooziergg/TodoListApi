@@ -22,14 +22,16 @@ namespace ToDoList.Tests
         {
             // Arrange
             var tarefas = new List<Tarefa>
-            {
-                new Tarefa { Id = 1, OrdemApresentacao = 1, Nome = "Teste 1", Custo = 50 },
-                new Tarefa { Id = 2, OrdemApresentacao = 2, Nome = "Teste 2", Custo = 1500 } // High cost
-            };
-            _serviceMock.Setup(s => s.GetAll(null)).Returns(tarefas);
+             {
+                 new Tarefa { Id = 1, OrdemApresentacao = 1, Nome = "Teste 1", Custo = 50 },
+                 new Tarefa { Id = 2, OrdemApresentacao = 2, Nome = "Teste 2", Custo = 1500 } // High cost
+             };
+
+            var filterDto = new TarefaFilterDTO { Paginate = false };
+            _serviceMock.Setup(s => s.GetAll(filterDto)).Returns(tarefas);
 
             // Act
-            var result = _controller.GetAll(null);
+            var result = _controller.GetAll(filterDto);
 
             // Assert
             var actionResult = Assert.IsType<OkObjectResult>(result);
@@ -56,7 +58,23 @@ namespace ToDoList.Tests
             Assert.Single(returnedTarefas);
         }
 
-        // Add other filter tests as needed.
+        [Fact]
+        public void GetAll_InvalidDateInterval_ReturnsBadRequest()
+        {
+            // Arrange
+            var filterDto = new TarefaFilterDTO
+            {
+                DataLimiteMin = DateTime.Now.AddDays(5),
+                DataLimiteMax = DateTime.Now.AddDays(2)
+            };
+
+            // Act
+            var result = _controller.GetAll(filterDto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal("Intervalo de datas inválido. A data de início deve ser anterior ou igual à data de fim.", badRequestResult.Value);
+        }
 
         #endregion
 
@@ -114,7 +132,7 @@ namespace ToDoList.Tests
             };
 
             _serviceMock.Setup(s => s.GetById(taskId)).Returns(existingTarefa);
-            _serviceMock.Setup(s => s.Update(It.IsAny<Tarefa>())).Returns(existingTarefa); 
+            _serviceMock.Setup(s => s.Update(It.IsAny<Tarefa>())).Returns(existingTarefa);
             // Act
             var result = _controller.Update(taskId, tarefaDto);
 
@@ -185,11 +203,13 @@ namespace ToDoList.Tests
                 new Tarefa { Id = 2, OrdemApresentacao = 2 },
                 new Tarefa { Id = 1, OrdemApresentacao = 3 } // The order was adjusted by backend
             };
-            _serviceMock.Setup(s => s.GetAll(null)).Returns(tarefas);
+            var filterDto = new TarefaFilterDTO { Paginate = false };
+            _serviceMock.Setup(s => s.GetAll(filterDto)).Returns(tarefas);
+       
 
             // Act
             _controller.Update(1, tarefaDto);
-            var result = _controller.GetAll(null);
+            var result = _controller.GetAll(filterDto);
 
             // Assert
             var actionResult = Assert.IsType<OkObjectResult>(result);

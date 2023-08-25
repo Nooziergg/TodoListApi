@@ -3,6 +3,7 @@ using ToDoList.Infrastructure.Common.Exceptions;
 using ToDoList.Models.DbModels;
 using ToDoList.Models.DTOs;
 using ToDoList.Services.Interfaces;
+using ToDoList.Utils;
 
 /// <summary>
 /// Controller responsible for CRUD operations related to Tasks.
@@ -26,6 +27,11 @@ public class TarefasController : ControllerBase
     [HttpGet]
     public IActionResult GetAll([FromQuery] TarefaFilterDTO filterDto)
     {
+        if (!DateIntervalUtils.IsValidDateInterval(filterDto.DataLimiteMin, filterDto.DataLimiteMax))
+        {
+            return BadRequest("Intervalo de datas inválido. A data de início deve ser anterior ou igual à data de fim.");
+        }
+        
         var tarefas = _service.GetAll(filterDto);
         return Ok(tarefas);
     }
@@ -70,6 +76,7 @@ public class TarefasController : ControllerBase
 
     /// <summary>
     /// Updates the details of an existing Task.
+    /// If ordemApresentacao is provided, the Task will be moved to the specified position and all other Tasks will be reordered accordingly.
     /// </summary>
     /// <param name="id">The unique identifier of the Task to update.</param>
     /// <param name="tarefaDto">The updated details of the Task.</param>

@@ -30,7 +30,11 @@ cd %APP_PATH%
 
 :: Build the Docker image
 echo Building Docker Image...
+echo %PROJECT_ID%
+echo %IMAGE_NAME%
+echo %TAG%
 docker build -t gcr.io/%PROJECT_ID%/%IMAGE_NAME%:%TAG% .
+
 IF %ERRORLEVEL% NEQ 0 (
     echo Docker build failed! Aborting deployment...
     pause
