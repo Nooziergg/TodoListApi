@@ -30,10 +30,11 @@ namespace ToDoList.Repository.Implementations
             _context.SaveChanges();
         }
 
-        protected void Update<T>(T entity) where T : class
+        protected T Update<T>(T entity) where T : class
         {
             _context.Set<T>().Update(entity);
             _context.SaveChanges();
+            return entity;
         }
 
         protected void Remove<T>(T entity) where T : class

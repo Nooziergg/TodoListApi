@@ -8,7 +8,7 @@ namespace ToDoList.Repository.Interfaces
         IEnumerable<Tarefa> GetAll(TarefaFilterDTO filter);
         Tarefa GetById(int id);
         void Add(Tarefa tarefa);
-        void Update(Tarefa tarefa);
+        Tarefa Update(Tarefa tarefa);
         void Delete(int id);
         Tarefa GetByName(string name);
         Tarefa GetByOrder(int order);

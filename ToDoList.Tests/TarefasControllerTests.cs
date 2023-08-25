@@ -93,18 +93,38 @@ namespace ToDoList.Tests
         #region Editar
 
         [Fact]
-        public void Update_MatchingIds_ReturnsNoContent()
+        public void Update_MatchingIds_ReturnsUpdatedTask()
         {
             // Arrange
-            var tarefaDto = new TarefaUpdateDTO { Id = 1 };
-            _serviceMock.Setup(s => s.GetById(It.IsAny<int>())).Returns(new Tarefa());
+            int taskId = 1;
+            var tarefaDto = new TarefaUpdateDTO
+            {
+                Id = taskId,
+                Nome = "UpdatedName",
+                Custo = 100,
+                OrdemApresentacao = 1
+            };
 
+            var existingTarefa = new Tarefa
+            {
+                Id = taskId,
+                Nome = "OldName",
+                Custo = 50,
+                OrdemApresentacao = 1
+            };
+
+            _serviceMock.Setup(s => s.GetById(taskId)).Returns(existingTarefa);
+            _serviceMock.Setup(s => s.Update(It.IsAny<Tarefa>())).Returns(existingTarefa); 
             // Act
-            var result = _controller.Update(1, tarefaDto);
+            var result = _controller.Update(taskId, tarefaDto);
 
             // Assert
-            Assert.IsType<NoContentResult>(result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedTarefa = Assert.IsType<Tarefa>(okResult.Value);
+            Assert.Equal(tarefaDto.Nome, returnedTarefa.Nome); // Verify the change
         }
+
+
 
         [Fact]
         public void Update_MismatchingIds_ReturnsBadRequest()

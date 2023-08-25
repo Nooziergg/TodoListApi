@@ -95,8 +95,8 @@ public class TarefasController : ControllerBase
             tarefaExistente.DataLimite = tarefaDto.DataLimite;
             tarefaExistente.OrdemApresentacao = tarefaDto.OrdemApresentacao;
 
-            _service.Update(tarefaExistente);
-            return NoContent();
+            return Ok(_service.Update(tarefaExistente));
+            
         }
         catch (BusinessException ex)
         {

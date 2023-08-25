@@ -39,33 +39,35 @@ namespace ToDoList.Services.Implementations
             _repository.Add(tarefa);
         }
 
-            public void Update(Tarefa tarefa)
+        public Tarefa Update(Tarefa tarefa)
+        {
+            var existingTask = _repository.GetByName(tarefa.Nome);
+
+            if (existingTask != null && existingTask.Id != tarefa.Id)
             {
-                var existingTask = _repository.GetByName(tarefa.Nome);
-
-                if (existingTask != null && existingTask.Id != tarefa.Id)
-                {
-                    throw new BusinessException("Nome da tarefa já existe!");
-                }
-
-                var taskWithSameOrder = _repository.GetByOrder(tarefa.OrdemApresentacao);
-
-                if (taskWithSameOrder != null && taskWithSameOrder.Id != tarefa.Id)
-                {
-                    _repository.ShiftOrderFrom(tarefa.OrdemApresentacao);
-                }
-
-                _repository.Update(tarefa);
+                throw new BusinessException("Nome da tarefa já existe!");
             }
+
+            var taskWithSameOrder = _repository.GetByOrder(tarefa.OrdemApresentacao);
+
+            if (taskWithSameOrder != null && taskWithSameOrder.Id != tarefa.Id)
+            {
+                _repository.ShiftOrderFrom(tarefa.OrdemApresentacao);
+            }
+
+            
+            return _repository.Update(tarefa);
+
+        }
 
         public void Delete(int id)
         {
             _repository.Delete(id);
         }
         public int GetMaxOrdemApresentacao()
-        {         
+        {
             return _repository.GetMaxOrdemApresentacao();
         }
-     
+
     }
 }

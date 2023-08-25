@@ -25,7 +25,6 @@ if (connectionString.StartsWith("EnvironmentVariable:"))
     connectionString = Environment.GetEnvironmentVariable(envVarName);
 }
 
-
 // Add the DbContext to the services container.
 builder.Services.AddDbContext<TarefaContext>(options =>
     options.UseSqlServer(connectionString));
@@ -38,9 +37,20 @@ builder.Services.AddScoped<IErrorRepository>(provider =>
     new ErrorRepository(provider.GetRequiredService<TarefaContext>(), connectionString));
 builder.Services.AddScoped<IErrorService, ErrorService>();
 
+// Configure CORS to allow all origins, headers, and methods
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 builder.Services.AddControllers(options =>
 {
-    
     options.ModelBinderProviders.Insert(0, new TrimStringModelBinderProvider());
     options.ModelBinderProviders.Insert(0, new CustomDateBinderProvider());
 })
@@ -57,13 +67,13 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
-
 });
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -73,6 +83,10 @@ else
     app.UseExceptionHandler("/error");
 }
 app.UseHttpsRedirection();
+
+// Use CORS policy
+app.UseCors("AllowAll");
+
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
