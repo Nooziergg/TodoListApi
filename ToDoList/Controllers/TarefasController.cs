@@ -29,7 +29,7 @@ public class TarefasController : ControllerBase
     {
         if (!DateIntervalUtils.IsValidDateInterval(filterDto.DataLimiteMin, filterDto.DataLimiteMax))
         {
-            return BadRequest("Intervalo de datas inválido. A data de início deve ser anterior ou igual à data de fim.");
+            return BadRequest("Invalid date interval. The start date must be equal or before the end date.");
         }
         
         var tarefas = _service.GetAll(filterDto);
@@ -88,7 +88,7 @@ public class TarefasController : ControllerBase
         {
             if (id != tarefaDto.Id)
             {
-                return BadRequest("Ids não conferem");
+                return BadRequest("Ids do not match.");
             }
 
             var tarefaExistente = _service.GetById(id);

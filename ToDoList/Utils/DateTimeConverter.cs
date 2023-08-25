@@ -18,7 +18,7 @@
             }
             catch
             {
-                throw new BusinessException("Data inválida! O formato deve ser dd/MM/yyyy");
+                throw new BusinessException("Invalid date format! The correct format is dd/MM/yyyy");
             }
         }
 

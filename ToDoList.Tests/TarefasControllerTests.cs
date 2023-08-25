@@ -73,7 +73,7 @@ namespace ToDoList.Tests
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Intervalo de datas inválido. A data de início deve ser anterior ou igual à data de fim.", badRequestResult.Value);
+            Assert.Equal("Invalid date interval. The start date must be equal or before the end date.", badRequestResult.Value);
         }
 
         #endregion
@@ -168,7 +168,7 @@ namespace ToDoList.Tests
             mockService.Setup(s => s.GetById(1)).Returns(new Tarefa { Id = 1 });
 
             // Configurando o mock para lançar BusinessException ao tentar atualizar uma tarefa.
-            mockService.Setup(s => s.Update(It.IsAny<Tarefa>())).Throws(new BusinessException("Nome da tarefa já existe!"));
+            mockService.Setup(s => s.Update(It.IsAny<Tarefa>())).Throws(new BusinessException("Task name already exists!"));
 
             var controller = new TarefasController(mockService.Object);
 
@@ -186,7 +186,7 @@ namespace ToDoList.Tests
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Nome da tarefa já existe!", badRequestResult.Value);
+            Assert.Equal("Task name already exists!", badRequestResult.Value);
         }
 
 
@@ -241,7 +241,7 @@ namespace ToDoList.Tests
         {
             // Arrange
             var tarefaDto = new TarefaInsertDTO { Nome = "DuplicateName" };
-            _serviceMock.Setup(s => s.Add(It.IsAny<Tarefa>())).Throws(new BusinessException("Nome da tarefa já existe!"));
+            _serviceMock.Setup(s => s.Add(It.IsAny<Tarefa>())).Throws(new BusinessException("Task name already exists!"));
 
             // Act & Assert
             Assert.Throws<BusinessException>(() => _controller.Add(tarefaDto));

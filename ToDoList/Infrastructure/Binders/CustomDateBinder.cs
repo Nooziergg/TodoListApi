@@ -25,8 +25,8 @@ namespace ToDoList.Infrastructure.Binders
             {
                 bindingContext.ModelState.TryAddModelError(
                     bindingContext.ModelName,
-                    "Formato de data inválido. O formato deve ser dd-MM-yyyy");
-                
+                    "Date should be in format dd-MM-yyyy");
+
             }
 
             return Task.CompletedTask;

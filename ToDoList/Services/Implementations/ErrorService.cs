@@ -34,7 +34,7 @@ namespace ToDoList.Services.Implementations
                 StatusCode = code,
                 Message = isDevelopment || exception is BusinessException
                    ? exception.Message
-                   : "Ocorreu um erro inesperado.",
+                   : "Unexpected error.",
                 Details = isDevelopment ? exception.StackTrace : null
             };    
             error.StatusCode = code;

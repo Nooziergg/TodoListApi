@@ -31,7 +31,7 @@ namespace ToDoList.Services.Implementations
 
             if (existingTask != null)
             {
-                throw new BusinessException("Nome da tarefa já existe!");
+                throw new BusinessException("Task name already exists!");
             }
 
             tarefa.OrdemApresentacao = _repository.GetMaxOrdemApresentacao() + 1;
@@ -45,7 +45,7 @@ namespace ToDoList.Services.Implementations
 
             if (existingTask != null && existingTask.Id != tarefa.Id)
             {
-                throw new BusinessException("Nome da tarefa já existe!");
+                throw new BusinessException("Task name already exists!");
             }
 
             var taskWithSameOrder = _repository.GetByOrder(tarefa.OrdemApresentacao);
